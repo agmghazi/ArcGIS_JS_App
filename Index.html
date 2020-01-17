@@ -11,12 +11,13 @@
 </head>
 
 <body>
+    <select id="lstservices"></select>
     <div id="mapview" style="width: 700px; height:700px;"> map here</div>
     <script>
         let map1;
         let mapview;
-        require(["esri/Map", "esri/views/MapView", "dojo/domReady!"],
-            function(Map, MapView) {
+        require(["esri/Map", "esri/views/MapView", "esri/request", "esri/layers/MapImageLayer", "dojo/domReady!"],
+            function(Map, MapView, Request, MapImageLayer) {
                 map1 = new Map({
                     basemap: "topo",
                 });
@@ -25,6 +26,32 @@
                     map: map1,
                     center: [43.944454193102594, 26.34342198397981],
                     zoom: 15
+                });
+
+                let URL = "http://localhost:6080/arcgis/rest/services?f=json";
+                let requestOptions = {
+                    responseType: "json"
+                };
+                Request(URL, requestOptions).then(function(response) {
+                    let result = response.data;
+                    let lstservice = document.getElementById("lstservices");
+
+                    lstservice.addEventListener("change", function() {
+                        let selectService = lstservice.options[lstservice.selectedIndex].textContent;
+                        let layer = new MapImageLayer({
+                            url: "http://localhost:6080/arcgis/rest/services/" + selectService + "/MapServer"
+                        });
+                        map1.add(layer);
+                        layer.then(function() {
+                            mapview.goTo(layer.fullExtent);
+                        });
+                    })
+
+                    for (let i = 0; i < result.services.length; i++) {
+                        let options = document.createElement("option");
+                        options.textContent = result.services[i].name;
+                        lstservice.appendChild(options);
+                    }
                 });
             });
     </script>
