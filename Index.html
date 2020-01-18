@@ -17,8 +17,10 @@
     <script>
         let map1;
         let mapview;
-        require(["esri/Map", "esri/views/MapView", "esri/request", "esri/layers/MapImageLayer", "dojo/domReady!"],
-            function(Map, MapView, Request, MapImageLayer) {
+        require(["esri/Map", "esri/views/MapView", "esri/request", "esri/layers/MapImageLayer",
+                "esri/widgets/Legend", "esri/widgets/Expand", "esri/widgets/ScaleBar", "dojo/domReady!"
+            ],
+            function(Map, MapView, Request, MapImageLayer, Legend, Expand, ScaleBar) {
                 map1 = new Map({
                     basemap: "topo",
                 });
@@ -28,6 +30,22 @@
                     center: [43.944454193102594, 26.34342198397981],
                     zoom: 15
                 });
+                let legend = new Legend({
+                    view: mapview,
+                    container: document.createElement("div")
+                });
+                let expand = new Expand({
+                    view: mapview,
+                    content: legend.container,
+                    expandIconClass: "esri-icon-layers"
+                });
+                mapview.ui.add(expand, "bottom-right");
+
+                let scalebar = new ScaleBar({
+                    view: mapview,
+                    unit: "dual"
+                });
+                mapview.ui.add(scalebar, "bottom-left");
 
                 let URL = "http://localhost:6080/arcgis/rest/services?f=json";
                 let requestOptions = {
@@ -77,4 +95,4 @@
 
 </body>
 
-</html>ss
+</html>
