@@ -13,6 +13,7 @@
 <body>
     <select id="lstservices"></select>
     <div id="mapview" style="width: 700px; height:700px;"> map here</div>
+    <div id="attrlayer"></div>
     <script>
         let map1;
         let mapview;
@@ -41,9 +42,27 @@
                         let layer = new MapImageLayer({
                             url: "http://localhost:6080/arcgis/rest/services/" + selectService + "/MapServer"
                         });
+                        map1.removeAll();
                         map1.add(layer);
                         layer.then(function() {
                             mapview.goTo(layer.fullExtent);
+                            //populate my Layers
+                            let attrlayers = document.getElementById("attrlayer");
+                            for (let i = 0; i < layer.sublayers.length; i++) {
+                                let sublayer = layer.sublayers.items[i];
+                                let input = document.createElement("input");
+                                input.type = "checkbox";
+                                input.value = sublayer.id;
+                                input.checked = sublayer.visible;
+                                input.addEventListener("click", function(e) {
+                                    let clikedLayer = layer.findSublayerById(Number(e.target.value))
+                                    clikedLayer.visible = e.target.checked
+                                });
+                                let lbl = document.createElement("label");
+                                lbl.textContent = sublayer.title;
+                                attrlayers.appendChild(input);
+                                attrlayers.appendChild(lbl);
+                            }
                         });
                     })
 
@@ -58,4 +77,4 @@
 
 </body>
 
-</html>
+</html>ss
