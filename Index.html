@@ -12,15 +12,34 @@
 
 <body>
     <select id="lstservices"></select>
-    <div id="mapview" style="width: 700px; height:700px;"> map here</div>
-    <div id="attrlayer"></div>
+    <table border="1">
+        <tr>
+            <td valign="top">
+                <div id="attrlayer" style="overflow: auto; width: 300px; height: 700px;"></div>
+            </td>
+            <td>
+                <div id="mapview" style="width: 700px; height:700px;"> map here</div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                Table
+                <div id="attributTabe" style="overflow: auto; ;width: 1000px; height: 800px;"></div>
+            </td>
+        </tr>
+    </table>
+
+
     <script>
         let map1;
         let mapview;
+        let selectService;
+        let Request;
         require(["esri/Map", "esri/views/MapView", "esri/request", "esri/layers/MapImageLayer",
                 "esri/widgets/Legend", "esri/widgets/Expand", "esri/widgets/ScaleBar", "dojo/domReady!"
             ],
-            function(Map, MapView, Request, MapImageLayer, Legend, Expand, ScaleBar) {
+            function(Map, MapView, esriRequest, MapImageLayer, Legend, Expand, ScaleBar) {
+                Request = esriRequest;
                 map1 = new Map({
                     basemap: "topo",
                 });
@@ -56,7 +75,7 @@
                     let lstservice = document.getElementById("lstservices");
 
                     lstservice.addEventListener("change", function() {
-                        let selectService = lstservice.options[lstservice.selectedIndex].textContent;
+                        selectService = lstservice.options[lstservice.selectedIndex].textContent;
                         let layer = new MapImageLayer({
                             url: "http://localhost:6080/arcgis/rest/services/" + selectService + "/MapServer"
                         });
@@ -69,9 +88,14 @@
                             for (let i = 0; i < layer.sublayers.length; i++) {
                                 let sublayer = layer.sublayers.items[i];
                                 let input = document.createElement("input");
+                                let br = document.createElement("br");
                                 input.type = "checkbox";
                                 input.value = sublayer.id;
                                 input.checked = sublayer.visible;
+                                let btn = document.createElement("button");
+                                btn.textContent = "Table";
+                                btn.layerid = sublayer.id;
+                                btn.addEventListener("click", populateAttributeTable)
                                 input.addEventListener("click", function(e) {
                                     let clikedLayer = layer.findSublayerById(Number(e.target.value))
                                     clikedLayer.visible = e.target.checked
@@ -80,6 +104,9 @@
                                 lbl.textContent = sublayer.title;
                                 attrlayers.appendChild(input);
                                 attrlayers.appendChild(lbl);
+                                attrlayers.appendChild(btn);
+                                attrlayers.appendChild(br);
+
                             }
                         });
                     })
@@ -91,6 +118,44 @@
                     }
                 });
             });
+
+        function populateAttributeTable(e) {
+            let attribute = document.getElementById("attributTabe");
+            attribute.innerHTML = "";
+            let queryUrl = "http://localhost:6080/arcgis/rest/services/" + selectService + "/MapServer/" + e.target.layerid + "/query";
+            let requestOptions = {
+                responseType: "json",
+                query: {
+                    f: "json",
+                    returnCountOnly: false,
+                    outFields: "*",
+                    where: "1=1"
+                }
+            };
+            Request(queryUrl, requestOptions).then(response => {
+                let table = document.createElement("table");
+                table.border = 2;
+                let header = document.createElement("tr");
+                table.appendChild(header);
+                for (let i = 0; i < response.data.fields.length; i++) {
+                    let column = document.createElement("th");
+                    column.textContent = response.data.fields[i].alias;
+                    header.appendChild(column);
+                }
+                for (let i = 0; i < response.data.features.length; i++) {
+                    let feature = response.data.features[i];
+                    let row = document.createElement("tr");
+                    table.appendChild(row);
+                    for (let j = 0; j < response.data.fields.length; j++) {
+                        let filed = response.data.fields[j];
+                        let colum = document.createElement("td");
+                        colum.textContent = feature.attributes[filed.name];
+                        row.appendChild(colum);
+                    }
+                }
+                attribute.appendChild(table);
+            })
+        }
     </script>
 
 </body>
