@@ -5,26 +5,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
     <link rel="stylesheet" href="http://localhost:6070/4.4/esri/css/main.css">
     <script src="http://localhost:6070/4.4/init.js"></script>
     <title>ArcGIS JS App</title>
+    <style>
+        #mapview {
+            padding: 0px;
+            margin: 0px;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            left: 0;
+        }
+        
+        #toggleLayers {
+            position: relative;
+            font-size: 20px;
+            left: 10px;
+            top: 6px;
+        }
+        
+        #toggleAttribute {
+            position: relative;
+            font-size: 20px;
+            left: 16px;
+            top: 6px;
+        }
+        
+        #lstservices {
+            position: relative;
+            font-size: 20px;
+            left: 1650px;
+            top: 6px;
+        }
+    </style>
 </head>
 
 <body>
+    <div id="mapview"> map here</div>
     <select id="lstservices"></select>
-    <table border="1">
+    <button id="toggleLayers">الطبقات</button>
+    <button id="toggleAttribute">جدول البيانات الوصفيه</button>
+
+    <table>
         <tr>
             <td valign="top">
-                <div id="attrlayer" style="overflow: auto; width: 300px; height: 700px;"></div>
+                <div id="attrlayer" style="overflow: auto; width: 300px; height: 700px; display: none;" title="الطبقات"> </div>
             </td>
             <td>
-                <div id="mapview" style="width: 700px; height:700px;"> map here</div>
+
             </td>
         </tr>
         <tr>
             <td colspan="2">
-                Table
-                <div id="attributTabe" style="overflow: auto; ;width: 1000px; height: 800px;"></div>
+                <div id="attributTabe" style="overflow: auto; ;width: 1000px; height: 800px; display: none;" title="جدول البيانات الوصفيه"></div>
             </td>
         </tr>
     </table>
@@ -156,6 +198,41 @@
                 attribute.appendChild(table);
             })
         }
+
+
+        $(function() {
+            $("#attrlayer").dialog({
+                autoOpen: false,
+                show: {
+                    effect: "blind",
+                    duration: 1000
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 1000
+                }
+            });
+            $("#toggleLayers").on("click", function() {
+                $("#attrlayer").dialog("open");
+            });
+        });
+
+        $(function() {
+            $("#attributTabe").dialog({
+                autoOpen: false,
+                show: {
+                    effect: "blind",
+                    duration: 1000
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 1000
+                }
+            });
+            $("#toggleAttribute").on("click", function() {
+                $("#attributTabe").dialog("open");
+            });
+        });
     </script>
 
 </body>
