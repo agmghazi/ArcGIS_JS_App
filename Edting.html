@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://js.arcgis.com/4.12/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.12/"></script>
+    <title>Edting by ArcGIS Server Online</title>
+    <style>
+        html,
+        body,
+        #viewview {
+            padding: 0px;
+            margin: 0px;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        let map;
+        let view;
+        require(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "dojo/domReady!"],
+            function(Map, MapView, FeatureLayer) {
+
+                let WTransmissionPipeSymbol = {
+                    type: "simple",
+                    symbol: {
+                        type: "simple-line",
+                        cap: "round",
+                        color: [0, 0, 255],
+                        width: "5px",
+                        style: "solid"
+                    }
+                }
+                let WTransmissionPipeLabel = {
+                    symbol: {
+                        type: "text",
+                        color: "black",
+                        haloColor: "white",
+                        haloSize: "1.5px",
+                        font: {
+                            size: "13px",
+                            family: "Noto sans",
+                            style: "italic",
+                            weight: "normal"
+                        }
+
+                    },
+                    labelPlacement: "above-center",
+                    labelExpressionInfo: {
+                        expression: "$feature.Shape__Length"
+                    }
+                }
+                let WTransmissionPipePopup = {
+                    "title": "WTransmissionPipe",
+                    "content": "<br>Materal:</br> {MATERIAL_E} <br>CITYENAME:</br> {CITYENAME}"
+                }
+                const WTransmissionPipe = new FeatureLayer({
+                    url: "https://services7.arcgis.com/NRzwfpZLzMYitgIg/arcgis/rest/services/wtransmissionpipe/FeatureServer",
+                    outFiels: ["*"],
+                    popupEnabled: true,
+                    id: "WTransmissionPipe",
+                    renderer: WTransmissionPipeSymbol,
+                    labelingInfo: [WTransmissionPipeLabel],
+                    popupTemplate: WTransmissionPipePopup
+                });
+
+
+                map = new Map({
+                    basemap: "topo",
+                    layers: [WTransmissionPipe]
+                });
+                view = new MapView({
+                    container: "viewview",
+                    map: map,
+                    center: [43.902257, 26.38444],
+                    zoom: 15
+                });
+            });
+    </script>
+    <div id="viewview"></div>
+</body>
+
+</html>
