@@ -26,7 +26,259 @@
         let view;
         require(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "dojo/domReady!"],
             function(Map, MapView, FeatureLayer) {
+                // wfitting
+                let wfittingSymbol = {
+                    type: "simple",
+                    symbol: {
+                        type: "simple-marker",
+                        style: "square",
+                        color: "red",
+                        size: "5"
+                    }
+                }
+                let wfittingPopup = {
+                        "title": "wfitting",
+                        "content": "<br>FID:</br> {FID} <br>z:</br> {z}"
+                    }
+                    // wservicevalve
+                let wservicevalveSymbol = {
+                    type: "simple",
+                    symbol: {
+                        type: "picture-marker",
+                        url: "https://i.ibb.co/vZJprqN/serv-Valves-JPG.png",
+                        width: "15px",
+                        height: "15px"
+                    }
+                }
+                let wservicevalveLabel = {
+                    symbol: {
+                        type: "text",
+                        color: "black",
+                        haloColor: "white",
+                        haloSize: "1.5px",
+                        font: {
+                            size: "12px",
+                            family: "Noto sans",
+                            style: "italic",
+                            weight: "normal"
+                        }
 
+                    },
+                    labelPlacement: "above-center",
+                    labelExpressionInfo: {
+                        expression: "$feature.z"
+                    }
+                }
+                let wservicevalvePopup = {
+                        "title": "wservicevalve",
+                        "content": "<br>FID:</br> {FID} <br>z:</br> {z}"
+                    }
+                    // wsystemvalve
+                let wsystemvalveSymbol = {
+                    type: "simple",
+                    symbol: {
+                        type: "picture-marker",
+                        url: "https://i.ibb.co/jbccRKy/sys-Valves-JPG.png",
+                        width: "15px",
+                        height: "15px"
+                    }
+                }
+                let wsystemvalveLabel = {
+                    symbol: {
+                        type: "text",
+                        color: "black",
+                        haloColor: "white",
+                        haloSize: "1.5px",
+                        font: {
+                            size: "12px",
+                            family: "Noto sans",
+                            style: "italic",
+                            weight: "normal"
+                        }
+
+                    },
+                    labelPlacement: "above-center",
+                    labelExpressionInfo: {
+                        expression: "$feature.z"
+                    }
+                }
+                let wsystemvalvePopup = {
+                        "title": "wsystemvalve",
+                        "content": "<br>FID:</br> {FID} <br>z:</br> {z}"
+                    }
+                    // wfirehydrant
+                let wfirehydrantSymbol = {
+                    type: "simple",
+                    symbol: {
+                        type: "picture-marker",
+                        url: "https://i.ibb.co/3hd05r8/firehydrant.png",
+                        width: "15px",
+                        height: "15px"
+                    }
+                }
+                let wfirehydrantLabel = {
+                    symbol: {
+                        type: "text",
+                        color: "black",
+                        haloColor: "white",
+                        haloSize: "1.5px",
+                        font: {
+                            size: "12px",
+                            family: "Noto sans",
+                            style: "italic",
+                            weight: "normal"
+                        }
+
+                    },
+                    labelPlacement: "above-center",
+                    labelExpressionInfo: {
+                        expression: "$feature.z"
+                    }
+                }
+                let wfirehydrantPopup = {
+                        "title": "wfirehydrant",
+                        "content": "<br>FID:</br> {FID} <br>z:</br> {z}"
+                    }
+                    // wservicemeter
+                let wservicemeterSymbol = {
+                    type: "simple",
+                    symbol: {
+                        type: "picture-marker",
+                        url: "https://i.ibb.co/rxZ8n85/meter.png",
+                        width: "10px",
+                        height: "10px"
+                    }
+                }
+                let wservicemeterLabel = {
+                    symbol: {
+                        type: "text",
+                        color: "black",
+                        haloColor: "white",
+                        haloSize: "1.5px",
+                        font: {
+                            size: "12px",
+                            family: "Noto sans",
+                            style: "italic",
+                            weight: "normal"
+                        }
+
+                    },
+                    labelPlacement: "above-center",
+                    labelExpressionInfo: {
+                        expression: "$feature.Join_"
+                    }
+                }
+                let wservicemeterPopup = {
+                    "title": "wservicemeter",
+                    "content": "<br>Join_:</br> {Join_} <br>z:</br> {z}"
+                }
+
+                //wfirehydrantpipe
+                let wfirehydrantpipeSymbol = {
+                    type: "simple",
+                    symbol: {
+                        type: "simple-line",
+                        cap: "round",
+                        color: [133, 160, 214],
+                        width: "2px",
+                        style: "solid"
+                    }
+                }
+                let wfirehydrantpipeLabel = {
+                    symbol: {
+                        type: "text",
+                        color: "black",
+                        haloColor: "white",
+                        haloSize: "1.5px",
+                        font: {
+                            size: "13px",
+                            family: "Noto sans",
+                            style: "italic",
+                            weight: "normal"
+                        }
+
+                    },
+                    labelPlacement: "above-center",
+                    labelExpressionInfo: {
+                        expression: "$feature.Shape__Length"
+                    }
+                }
+                let wfirehydrantpipePopup = {
+                    "title": "wfirehydrantpipe",
+                    "content": "<br>Materal:</br> {MATERIAL_E} <br>CITYENAME:</br> {CITYENAME}"
+                }
+
+                //wservicepipe
+                let wservicepipeSymbol = {
+                    type: "simple",
+                    symbol: {
+                        type: "simple-line",
+                        cap: "round",
+                        color: [125, 135, 212],
+                        width: "2px",
+                        style: "solid"
+                    }
+                }
+                let wservicepipeLabel = {
+                    symbol: {
+                        type: "text",
+                        color: "black",
+                        haloColor: "white",
+                        haloSize: "1.5px",
+                        font: {
+                            size: "13px",
+                            family: "Noto sans",
+                            style: "italic",
+                            weight: "normal"
+                        }
+
+                    },
+                    labelPlacement: "above-center",
+                    labelExpressionInfo: {
+                        expression: "$feature.Shape__Length"
+                    }
+                }
+                let wservicepipePopup = {
+                    "title": "wservicepipe",
+                    "content": "<br>Materal:</br> {MATERIAL_E} <br>CITYENAME:</br> {CITYENAME}"
+                }
+
+                // distrution pipe
+                let wdistributionpipeSymbol = {
+                    type: "simple",
+                    symbol: {
+                        type: "simple-line",
+                        cap: "round",
+                        color: [106, 205, 132],
+                        width: "5px",
+                        style: "solid"
+                    }
+                }
+                let wdistributionpipeLabel = {
+                    symbol: {
+                        type: "text",
+                        color: "black",
+                        haloColor: "white",
+                        haloSize: "1.5px",
+                        font: {
+                            size: "13px",
+                            family: "Noto sans",
+                            style: "italic",
+                            weight: "normal"
+                        }
+
+                    },
+                    labelPlacement: "above-center",
+                    labelExpressionInfo: {
+                        expression: "$feature.Shape__Length"
+                    }
+                }
+                let wdistributionpipePopup = {
+                    "title": "wdistributionpipe",
+                    "content": "<br>Materal:</br> {MATERIAL_E} <br>CITYENAME:</br> {CITYENAME}"
+                }
+
+                // transmission pipe
                 let WTransmissionPipeSymbol = {
                     type: "simple",
                     symbol: {
@@ -70,10 +322,88 @@
                     popupTemplate: WTransmissionPipePopup
                 });
 
+                const wdistributionpipe = new FeatureLayer({
+                    url: "https://services7.arcgis.com/NRzwfpZLzMYitgIg/arcgis/rest/services/wdistributionpipe/FeatureServer",
+                    outFiels: ["*"],
+                    popupEnabled: true,
+                    id: "wdistributionpipe",
+                    renderer: wdistributionpipeSymbol,
+                    labelingInfo: [wdistributionpipeLabel],
+                    popupTemplate: wdistributionpipePopup
+                })
 
+                const wservicepipe = new FeatureLayer({
+                    url: "https://services7.arcgis.com/NRzwfpZLzMYitgIg/arcgis/rest/services/wservicepipe/FeatureServer",
+                    outFiels: ["*"],
+                    popupEnabled: true,
+                    id: "wservicepipe",
+                    renderer: wservicepipeSymbol,
+                    labelingInfo: [wservicepipeLabel],
+                    popupTemplate: wservicepipePopup
+                })
+                const wfirehydrantpipe = new FeatureLayer({
+                    url: "https://services7.arcgis.com/NRzwfpZLzMYitgIg/arcgis/rest/services/wfirehydrantpipe/FeatureServer",
+                    outFiels: ["*"],
+                    popupEnabled: true,
+                    id: "wfirehydrantpipe",
+                    renderer: wfirehydrantpipeSymbol,
+                    labelingInfo: [wfirehydrantpipeLabel],
+                    popupTemplate: wfirehydrantpipePopup
+                })
+                const wservicemeter = new FeatureLayer({
+                    url: "https://services7.arcgis.com/NRzwfpZLzMYitgIg/arcgis/rest/services/wservicemeter/FeatureServer",
+                    outFiels: ["*"],
+                    popupEnabled: true,
+                    id: "wservicemeter",
+                    renderer: wservicemeterSymbol,
+                    labelingInfo: [wservicemeterLabel],
+                    outFiels: ["Join_", "Z"],
+                    popupTemplate: wservicemeterPopup
+                })
+                const wfirehydrant = new FeatureLayer({
+                    url: "https://services7.arcgis.com/NRzwfpZLzMYitgIg/arcgis/rest/services/wfirehydrant/FeatureServer",
+                    outFiels: ["*"],
+                    popupEnabled: true,
+                    id: "wfirehydrant",
+                    renderer: wfirehydrantSymbol,
+                    labelingInfo: [wfirehydrantLabel],
+                    outFiels: ["FID", "Z"],
+                    popupTemplate: wfirehydrantPopup
+                })
+                const wsystemvalve = new FeatureLayer({
+                    url: "https://services7.arcgis.com/NRzwfpZLzMYitgIg/arcgis/rest/services/wsystemvalve/FeatureServer",
+                    outFiels: ["*"],
+                    popupEnabled: true,
+                    id: "wsystemvalve",
+                    renderer: wsystemvalveSymbol,
+                    labelingInfo: [wsystemvalveLabel],
+                    outFiels: ["FID", "Z"],
+                    popupTemplate: wsystemvalvePopup
+                });
+                const wservicevalve = new FeatureLayer({
+                    url: "https://services7.arcgis.com/NRzwfpZLzMYitgIg/arcgis/rest/services/wservicevalve/FeatureServer",
+                    outFiels: ["*"],
+                    popupEnabled: true,
+                    id: "wservicevalve",
+                    renderer: wservicevalveSymbol,
+                    labelingInfo: [wservicevalveLabel],
+                    outFiels: ["FID", "Z"],
+                    popupTemplate: wservicevalvePopup
+                })
+                const wfitting = new FeatureLayer({
+                    url: "https://services7.arcgis.com/NRzwfpZLzMYitgIg/arcgis/rest/services/wfitting/FeatureServer",
+                    outFiels: ["*"],
+                    popupEnabled: true,
+                    id: "wfitting",
+                    renderer: wfittingSymbol,
+                    outFiels: ["FID", "Z"],
+                    popupTemplate: wfittingPopup
+                })
                 map = new Map({
                     basemap: "topo",
-                    layers: [WTransmissionPipe]
+                    layers: [WTransmissionPipe, wdistributionpipe, wservicepipe,
+                        wservicemeter, wfirehydrant, wsystemvalve, wservicevalve, wfirehydrantpipe, wfitting
+                    ]
                 });
                 view = new MapView({
                     container: "viewview",
