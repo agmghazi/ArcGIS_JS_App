@@ -89,7 +89,10 @@
                 "esri/widgets/FeatureForm",
                 "esri/widgets/FeatureTemplates",
                 "esri/widgets/Search",
-                "esri/widgets/Expand", "dojo/domReady!"
+                "esri/widgets/Expand",
+                "esri/widgets/Track",
+                "esri/widgets/BasemapGallery",
+                "dojo/domReady!"
             ],
             function(Map,
                 MapView,
@@ -98,7 +101,9 @@
                 FeatureForm,
                 FeatureTemplates,
                 Search,
-                Expand
+                Expand,
+                Track,
+                BasemapGallery
             ) {
                 let editFeature, highlight;
                 let activeWidget = null;
@@ -727,7 +732,29 @@
                 view.ui.add(search, {
                     position: "top-left",
                     index: 0
-                })
+                });
+
+                //tracking
+                let track = new Track({
+                    view: view
+                });
+                view.ui.add(track, "top-left");
+
+                //BasemapGallery
+                let basemapGallery = new BasemapGallery({
+                    view: view,
+                    container: document.createElement("div")
+                });
+                let expands = new Expand({
+                    view: view,
+                    content: basemapGallery
+                });
+                basemapGallery.watch("activeBasemap", function() {
+                    let mobileSize =
+                        view.heightBreakPoint === "xsmall" ||
+                        view.widthBreakPoint === "xsmall"
+                });
+                view.ui.add(expands, "top-right");
             });
     </script>
     <div id="editArea" class="editArea-container esri-widget--panel">
