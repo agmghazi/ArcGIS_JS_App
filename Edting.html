@@ -82,10 +82,24 @@
     <script>
         let map;
         let view;
-        require(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
-                "esri/Graphic", "esri/widgets/FeatureForm", "esri/widgets/FeatureTemplates", "esri/widgets/Expand", "dojo/domReady!"
+        require(["esri/Map",
+                "esri/views/MapView",
+                "esri/layers/FeatureLayer",
+                "esri/Graphic",
+                "esri/widgets/FeatureForm",
+                "esri/widgets/FeatureTemplates",
+                "esri/widgets/Search",
+                "esri/widgets/Expand", "dojo/domReady!"
             ],
-            function(Map, MapView, FeatureLayer, Graphic, FeatureForm, FeatureTemplates, Expand) {
+            function(Map,
+                MapView,
+                FeatureLayer,
+                Graphic,
+                FeatureForm,
+                FeatureTemplates,
+                Search,
+                Expand
+            ) {
                 let editFeature, highlight;
                 let activeWidget = null;
 
@@ -690,6 +704,30 @@
                 };
                 //#endregion
 
+                let search = new Search({
+                    view: view,
+                    allPlaceholder: "ابحث هنا",
+                    sources: [{
+                        layer: wdistributionpipe,
+                        searchFields: ["MATERIAL_E"],
+                        displayField: "MATERIAL_E",
+                        exactMatch: false,
+                        outFields: ["*"],
+                        name: "بحث عن الخطوط"
+                    }, {
+                        layer: wservicemeter,
+                        searchFields: ["Join_"],
+                        displayField: "Join_",
+                        exactMatch: false,
+                        outFields: ["*"],
+                        name: "بحث عن العدادت"
+                    }],
+                    includeDefaultSources: false
+                });
+                view.ui.add(search, {
+                    position: "top-left",
+                    index: 0
+                })
             });
     </script>
     <div id="editArea" class="editArea-container esri-widget--panel">
