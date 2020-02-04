@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>First Map</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.12/esri/css/main.css">
+    <script src="https://js.arcgis.com/4.12/"></script>
+    <style>
+        #viewDiv,body,html {
+            height: 100%;
+            width:  100%;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        let map1;
+        let view;
+        require(["esri/Map",
+            "esri/views/MapView",
+            "esri/widgets/BasemapToggle",
+            "esri/widgets/BasemapGallery",
+            "esri/layers/FeatureLayer",
+            "esri/widgets/ScaleBar",
+            "esri/widgets/Legend",
+            "esri/widgets/Search"],
+            function (Map,
+                MapView,
+                BasemapToggle,
+                BasemapGallery,
+                FeatureLayer,
+                ScaleBar,
+                Legend,
+                Search) {
+
+                map1 = new Map({ basemap: "osm" });
+                view = new MapView({ container: "viewDiv", map: map1, center: [-118.71511, 34.09042], zoom: 9 });
+
+                let basemapToggle = new BasemapToggle({
+                    view: view,
+                    nextBasemap: "satellite"
+                });
+
+                view.ui.add(basemapToggle, "top-right");
+                // add new layer (Trails)
+                let Trails = new FeatureLayer({
+                    url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails/FeatureServer/0",
+                    
+                });
+                map1.add(Trails, 2);
+
+                let trailsSymbol= {
+                    type: "simple",
+                    symbol: {
+                     type:"picture-marker",
+                     url:"http://static.arcgis.com/images/Symbols/NPS/npsPictograph_0231b.png",
+                     width:"18px",
+                     height: "18px"
+                    }
+                }
+                let trailsLablel= {
+                    symbol:{
+                        type:"text",
+                        color:"red",
+                        haloColor:"#5E8D74",
+                        haloSize:"2px",
+                        font:{
+                            size:"12px",
+                            family:"Noto Sans",
+                            style:"italic",
+                            weight:"normal"
+                        }
+                    },
+                    labelPlacement:"above-center",
+                    labelExpressionInfo:{
+                        expression: "$feature.TRL_NAME"
+                    }
+                };
+               let popupTrails={
+                   "title":"{TRL_NAME}",
+                   "content": "<b>City</b> {CITY_JUR} </br> <b>PARKING</b> {PARKING} </br> <b>ZIP_CODE</b> {ZIP_CODE} </br> <b>Latitute</b> {LAT} </br> <b> Longitute</b> {LON}"
+               }
+
+                //add new layer (Trailheads)
+                let Trailheads = new FeatureLayer({
+                    url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads/FeatureServer/0",
+                    renderer: trailsSymbol,
+                    labelingInfo:[trailsLablel],
+                    outField:["TRL_NAME","CITY_JUR","PARKING","ZIP_CODE","LAT","LON"],
+                    popupTemplate: popupTrails
+                    
+                });
+                map1.add(Trailheads, 1);
+                //add new layer (Parks_and_Open_Space)
+                let Parks_and_Open_Space = new FeatureLayer({
+                    url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Parks_and_Open_Space/FeatureServer/0"
+                });
+                map1.add(Parks_and_Open_Space, 0);
+                //this code for scaleBar
+                view.ui.add(new ScaleBar({ view: view }), "bottom-left");
+                //this code for legend
+                view.ui.add(new Legend({ view: view }), "bottom-right");
+                //this code for search
+                view.ui.add(new Search({ view: view }), "top-left");
+                 
+                
+                 //this for get any think in map by event
+                view.on("click",function(event){
+                console.log(event.mapPoint.latitude);
+                console.log(event.mapPoint.longitude);
+                
+                 })
+            });
+    </script>
+    <div id="viewDiv"></div>
+</body>
+
+</html>
