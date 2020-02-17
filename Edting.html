@@ -733,6 +733,30 @@
                     position: "top-left",
                     index: 0
                 });
+                let search = new Search({
+                    view: view,
+                    allPlaceholder: "ابحث هنا",
+                    sources: [{
+                        layer: wdistributionpipe,
+                        searchFields: ["MATERIAL_E"],
+                        displayField: "MATERIAL_E",
+                        exactMatch: false,
+                        outFields: ["*"],
+                        name: "بحث عن الخطوط"
+                    }, {
+                        layer: wservicemeter,
+                        searchFields: ["Join_"],
+                        displayField: "Join_",
+                        exactMatch: false,
+                        outFields: ["*"],
+                        name: "بحث عن العدادت"
+                    }],
+                    includeDefaultSources: false
+                });
+                view.ui.add(search, {
+                    position: "top-left",
+                    index: 0
+                });
 
                 //tracking
                 let track = new Track({

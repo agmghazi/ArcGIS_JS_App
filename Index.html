@@ -5,108 +5,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="liberaryFiles/font-awesome.min.css">
+
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+    <script src="liberaryFiles/jquery-1.12.4.js"></script>
+    <script src="liberaryFiles/jquery-ui.js"></script>
+    <script src="liberaryFiles/jquery.dialogextend.min.js" ></script>
+    <script src="liberaryFiles/font-awesome.js" ></script>
+    
+
+    <link rel="stylesheet" href="style.css">
 
     <link rel="stylesheet" href="http://localhost:6070/4.4/esri/css/main.css">
     <script src="http://localhost:6070/4.4/init.js"></script>
     <title>ArcGIS JS App</title>
-    <style>
-        #mapview {
-            padding: 0px;
-            margin: 0px;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            right: 0;
-            left: 0;
-            left: 0;
-        }
-        
-        #toggleLayers {
-            position: relative;
-            font-size: 20px;
-            left: 10px;
-            top: 6px;
-        }
-        
-        #toggleAttribute {
-            position: relative;
-            font-size: 20px;
-            left: 16px;
-            top: 6px;
-        }
-        
-        #lstservices {
-            position: relative;
-            font-size: 20px;
-            left: 1650px;
-            top: 6px;
-        }
-        
-        #attributTabe {
-            font-family: Arial, Helvetica, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-            font-size: 10px;
-        }
-        
-        #attributTabe td,
-        #attributTabe th {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-        
-        #attributTabe tr:nth-child(even) {
-            border-color: #f2f2f2;
-        }
-        
-        #attributTabe tr:hover {
-            background-color: #ddd;
-        }
-        
-        #attributTabe th {
-            padding-top: 12px;
-            padding-bottom: 12px;
-            text-align: center;
-            background-color: #4caf50;
-            color: white;
-        }
-        
-        #myInut {
-            background-image: url('search.png');
-            background-position: 10px 10px;
-            background-repeat: no-repeat;
-            width: 360px;
-            font-size: 20px;
-            padding: 12px 20px 12px 40px;
-            border: 1px solid #ddd;
-            margin-bottom: 6px;
-        }
-        
-        #openlayer {
-            background-image: url('tableimg.png');
-            cursor: pointer;
-            width: 15px;
-            height: 15px;
-            border: none;
-        }
-    </style>
+   
 </head>
-
+<!-- <i class="fas fa-layer-group"></i> -->
 <body>
     <div id="mapview"> map here</div>
-    <select id="lstservices"></select>
-    <button id="toggleLayers">الطبقات</button>
-    <button id="toggleAttribute">جدول البيانات الوصفيه</button>
+    <select id="lstservices"></select>  <br> <br>
+    <button id="toggleLayers"> <i class="fas fa-layer-group"></i></button> <br> <br>
+    <button id="toggleAttribute"><i class="fas fa-table"></i></button>
 
     <table>
         <tr>
             <td valign="top">
-                <div id="attrlayer" style="overflow: auto; width: 300px; height: 700px; display: none;" title="الطبقات"> </div>
+                <div id="attrlayer" style="overflow: auto; width: 300px; height: 700px; display: none;" title="الطبقات">
+                </div>
             </td>
             <td>
 
@@ -114,7 +43,8 @@
         </tr>
         <tr>
             <td colspan="2">
-                <div id="attributTabe" style="overflow: auto; ;width: 1000px; height: 800px; display: none;" title="جدول البيانات الوصفيه"></div>
+                <div id="attributTabe" style="overflow: auto; ;width: 1000px; height: 800px; display: none;"
+                    title="جدول البيانات الوصفيه"></div>
             </td>
         </tr>
     </table>
@@ -128,7 +58,7 @@
         require(["esri/Map", "esri/views/MapView", "esri/request", "esri/layers/MapImageLayer",
                 "esri/widgets/Legend", "esri/widgets/Expand", "esri/widgets/ScaleBar", "dojo/domReady!"
             ],
-            function(Map, MapView, esriRequest, MapImageLayer, Legend, Expand, ScaleBar) {
+            function (Map, MapView, esriRequest, MapImageLayer, Legend, Expand, ScaleBar) {
                 Request = esriRequest;
                 map1 = new Map({
                     basemap: "topo",
@@ -160,18 +90,19 @@
                 let requestOptions = {
                     responseType: "json"
                 };
-                Request(URL, requestOptions).then(function(response) {
+                Request(URL, requestOptions).then(function (response) {
                     let result = response.data;
                     let lstservice = document.getElementById("lstservices");
 
-                    lstservice.addEventListener("change", function() {
+                    lstservice.addEventListener("change", function () {
                         selectService = lstservice.options[lstservice.selectedIndex].textContent;
                         let layer = new MapImageLayer({
-                            url: "http://localhost:6080/arcgis/rest/services/" + selectService + "/MapServer"
+                            url: "http://localhost:6080/arcgis/rest/services/" +
+                                selectService + "/MapServer"
                         });
                         map1.removeAll();
                         map1.add(layer);
-                        layer.then(function() {
+                        layer.then(function () {
                             mapview.goTo(layer.fullExtent);
                             //populate my Layers
                             let attrlayers = document.getElementById("attrlayer");
@@ -188,8 +119,9 @@
                                 btn.setAttribute("id", "openlayer");
                                 btn.layerid = sublayer.id;
                                 btn.addEventListener("click", populateAttributeTable)
-                                input.addEventListener("click", function(e) {
-                                    let clikedLayer = layer.findSublayerById(Number(e.target.value))
+                                input.addEventListener("click", function (e) {
+                                    let clikedLayer = layer.findSublayerById(Number(
+                                        e.target.value))
                                     clikedLayer.visible = e.target.checked
                                 });
                                 let lbl = document.createElement("label");
@@ -214,7 +146,8 @@
         function populateAttributeTable(e) {
             let attribute = document.getElementById("attributTabe");
             attribute.innerHTML = "";
-            let queryUrl = "http://localhost:6080/arcgis/rest/services/" + selectService + "/MapServer/" + e.target.layerid + "/query";
+            let queryUrl = "http://localhost:6080/arcgis/rest/services/" + selectService + "/MapServer/" + e.target
+                .layerid + "/query";
             let requestOptions = {
                 responseType: "json",
                 query: {
@@ -273,7 +206,7 @@
         }
 
 
-        $(function() {
+        $(function () {
             $("#attrlayer").dialog({
                 autoOpen: false,
                 show: {
@@ -284,25 +217,34 @@
                     effect: "explode",
                     duration: 1000
                 }
-            });
-            $("#toggleLayers").on("click", function() {
+            })
+
+            $("#toggleLayers").on("click", function () {
                 $("#attrlayer").dialog("open");
             });
         });
 
-        $(function() {
+        $(function () {
             $("#attributTabe").dialog({
-                autoOpen: false,
-                show: {
-                    effect: "blind",
-                    duration: 1000
-                },
-                hide: {
-                    effect: "explode",
-                    duration: 1000
-                }
-            });
-            $("#toggleAttribute").on("click", function() {
+                    autoOpen: false,
+                    show: {
+                        effect: "blind",
+                        duration: 1000
+                    },
+                    hide: {
+                        effect: "explode",
+                        duration: 1000
+                    },
+                    width: 500
+                })
+                .dialogExtend({
+                    "maximizable": true,
+                    "dblclick": "maximize",
+                    "icons": {
+                        "maximize": "ui-icon-arrow-4-diag"
+                    }
+                })
+            $("#toggleAttribute").on("click", function () {
                 $("#attributTabe").dialog("open");
             });
         });
