@@ -7,10 +7,8 @@ Create Application by ArcGIS Server with esri JavaScript API
 agmghazi@hotmail.com
 ``
 ``
-https://www.facebook.com/gisgamal
+https://www.facebook.com/agmghazi/
 ``
 ``
 https://www.linkedin.com/in/agmghazi/
 ``
-
-
